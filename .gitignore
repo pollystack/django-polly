@@ -148,5 +148,8 @@ GitHub.sublime-settings
 # OS generated files #
 .DS_Store
 
+# Node.js #
+node_modules/
+
 # AI models
 *.gguf

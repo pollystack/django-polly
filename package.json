@@ -1,0 +1,20 @@
+{
+  "name": "django-polly",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "example",
+    "test": "tests"
+  },
+  "scripts": {
+    "build-css": "tailwindcss build django_polly/static/css/tailwind.css -o django_polly/static/css/output.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tailwindcss": "^3.4.7"
+  }
+}

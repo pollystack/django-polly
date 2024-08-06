@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-8">Polly Stack Dashboard</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Summary</h2>
+        <p class="text-4xl font-bold text-blue-600">{{ total_parrots }}</p>
+        <p class="text-gray-600">Total Parrots</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Recent Parrots</h2>
+        <ul class="divide-y divide-gray-200">
+        {% for parrot in parrots %}
+            <li class="py-3 flex items-center">
+                <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ parrot.color }};"></span>
+                <span class="font-medium">{{ parrot.name }}</span>
+            </li>
+        {% empty %}
+            <li class="py-3 text-gray-500">No parrots added yet.</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
