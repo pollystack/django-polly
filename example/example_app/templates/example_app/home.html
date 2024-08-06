@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Django Polly Example</title>
+</head>
+<body>
+    <h1>Welcome to Django Polly!</h1>
+    <h2>Our Parrots:</h2>
+    <ul>
+    {% for parrot in parrots %}
+        <li>{{ parrot.name }} - {{ parrot.color }}</li>
+    {% empty %}
+        <li>No parrots yet.</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
