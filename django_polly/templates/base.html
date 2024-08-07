@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Polly Stack{% endblock %}</title>
-    {% load static %}
-    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex: 1;
+    }
+  </style>
 </head>
 <body class="bg-gray-100">
-    <nav class="bg-blue-600 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="{% url 'django_polly:dashboard' %}" class="text-2xl font-bold">Polly Stack</a>
-            <!-- Add more nav items here -->
-        </div>
-    </nav>
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+      <h1 class="text-2xl font-bold text-gray-900">Django Polly</h1>
+    </div>
+  </header>
 
-    <main class="container mx-auto mt-8 px-4">
-        {% block content %}
-        {% endblock %}
-    </main>
+  <main>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="bg-white py-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-center text-gray-500">&copy; 2024 Polly Stack. Django Polly</p>
+    </div>
+  </footer>
 </body>
 </html>

@@ -1,10 +1,9 @@
 from django.urls import path
-from . import views
 from .views import DashboardView
 
-app_name = 'django_polly'
+app_name = 'django_polly'  # This is important for namespacing
 
 urlpatterns = [
-    path('', views.parrot_list, name='parrot_list'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    # ... other URL patterns ...
 ]

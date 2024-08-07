@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.db import models
+from django.db.models import Avg
 from django.views.generic import TemplateView
 
-from .models import Parrot
+from .models import Parrot, Trick
 
 
 class DashboardView(TemplateView):
@@ -10,10 +11,8 @@ class DashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_parrots'] = Parrot.objects.count()
-        context['parrots'] = Parrot.objects.all()[:5]  # Display the latest 5 parrots
+        context['previous_total_parrots'] = context['total_parrots'] - 5  # This is a placeholder calculation
+        context['total_tricks'] = Trick.objects.count()
+        context['avg_tricks_per_parrot'] = Parrot.objects.annotate(trick_count=models.Count('tricks')).aggregate(Avg('trick_count'))['trick_count__avg'] or 0
+        context['recent_parrots'] = Parrot.objects.all().order_by('-id')[:5]
         return context
-
-
-def parrot_list(request):
-    parrots = Parrot.objects.all()
-    return render(request, 'django_polly/parrot_list.html', {'parrots': parrots})
