@@ -17,6 +17,8 @@ setup(
         'Django>=3.2',
         'django-json-widget',
         'djangorestframework',
+        'drf-spectacular',
+        'llama-cpp-python==0.2.87',
     ],
     classifiers=[
         'Environment :: Web Environment',
@@ -34,4 +36,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: LLM Management',
     ],
+    cmake_args=['-DGGML_BLAS=ON', '-DGGML_BLAS_VENDOR=OpenBLAS'],
 )
