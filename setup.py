@@ -15,6 +15,8 @@ setup(
     # ... other parameters ...
     install_requires=[
         'Django>=3.2',
+        'requests',
+        'tqdm',
         'django-json-widget',
         'djangorestframework',
         'drf-spectacular',
