@@ -156,6 +156,9 @@ insightful benefits."""
             print("AI_MODELS_PATH not set in settings file")
             print("Setting AI_MODELS_PATH to default value")
             ai_models_path = os.path.join(settings.BASE_DIR, "ai_models")
+            print(f"AI_MODELS_PATH: {ai_models_path}")
+        if not os.path.exists(ai_models_path):
+            os.makedirs(ai_models_path)
 
         if model_type == LLMModelType.META_LLAMA_3_1_INSTRUCT:
             self._model = LLMModelType.META_LLAMA_3_1_INSTRUCT
