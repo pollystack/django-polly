@@ -23,10 +23,17 @@ class LLMModelType(Enum):
 
     @staticmethod
     def llm_model_types():
-        values = [e.value for e in LLMModelType]
+        values = [e.name for e in LLMModelType]
         if values is None:
             return []
         return values
+
+    @staticmethod
+    def model_supported(model_type_str):
+        model = LLMModelType(model_type_str)
+        if model in LLMModelType.llm_model_types():
+            return True
+        return False
 
 
 class LLMModelMode:
@@ -38,75 +45,64 @@ class LLMInvoker:
     def __init__(self, system_prompt, llm_model_type, llm):
         self._system_prompt = system_prompt
         self.llm = llm
-        self.llm_model_type = llm_model_type
+        self.llm_model_type: LLMModelType = llm_model_type
 
     def send_message(self, message):
-        if self.llm_model_type in LLMModelType.llm_model_types():
-            answer = self.llm.create_chat_completion(
-                messages=[
-                    {
-                        "role": "system",
-                        "content": self._system_prompt,
-                    },
-                    {
-                        "role": "user",
-                        "content": message,
-                    },
-                ],
-                response_format={
-                    "type": "json_object",
+        answer = self.llm.create_chat_completion(
+            messages=[
+                {
+                    "role": "system",
+                    "content": self._system_prompt,
                 },
-                temperature=0,
-            )
-            return answer
-        else:
-            raise ValueError("LLM model type not supported")
+                {
+                    "role": "user",
+                    "content": message,
+                },
+            ],
+            response_format={
+                "type": "json_object",
+            },
+            temperature=0,
+        )
+        return answer
 
     def send_message_stream(self, message) -> Iterator[str]:
-        if self.llm_model_type in LLMModelType.llm_model_types():
-            stream = self.llm(
-                f"Human: {message}\nAssistant: ",
-                max_tokens=4096,
-                stop=["Human:", "\n"],
-                stream=True,
-            )
-            for output in stream:
-                if "choices" in output and output["choices"]:
-                    text = output["choices"][0].get("text", "")
-                    if text:
-                        yield text
-        else:
-            yield "LLM model type not supported"
+        stream = self.llm(
+            f"Human: {message}\nAssistant: ",
+            max_tokens=4096,
+            stop=["Human:", "\n"],
+            stream=True,
+        )
+        for output in stream:
+            if "choices" in output and output["choices"]:
+                text = output["choices"][0].get("text", "")
+                if text:
+                    yield text
 
     async def async_send_message_stream(self, message):
         logger.info(f"Starting message stream for: {message}")
-        if self.llm_model_type in LLMModelType.llm_model_types():
-            stream = await asyncio.to_thread(
-                self.llm.create_chat_completion,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": self._system_prompt,
-                    },
-                    {
-                        "role": "user",
-                        "content": message,
-                    },
-                ],
-                max_tokens=4096,
-                stop=["Human:", "\n\nHuman:"],  # Only stop at a new "Human:" prompt
-                stream=True,
-            )
-            for chunk in stream:
-                if "choices" in chunk and chunk["choices"]:
-                    delta = chunk["choices"][0].get("delta", {})
-                    if "content" in delta and delta["content"] is not None:
-                        yield delta["content"]
-                await asyncio.sleep(0)  # Yield control to allow other tasks to run
-        else:
-            logger.error(f"Unsupported LLM model type: {self.llm_model_type}")
-            yield "LLM model type not supported"
-
+        stream = await asyncio.to_thread(
+            self.llm.create_chat_completion,
+            messages=[
+                {
+                    "role": "system",
+                    "content": self._system_prompt,
+                },
+                {
+                    "role": "user",
+                    "content": message,
+                },
+            ],
+            max_tokens=4096,
+            stop=["Human:", "\n\nHuman:"],  # Only stop at a new "Human:" prompt
+            stream=True,
+        )
+        for chunk in stream:
+            if "choices" in chunk and chunk["choices"]:
+                delta = chunk["choices"][0].get("delta", {})
+                if "content" in delta and delta["content"] is not None:
+                    yield delta["content"]
+            await asyncio.sleep(0)  # Yield control to allow other tasks to run
         logger.info("Finished streaming message")
 
     async def custom_async_send_message_stream(self, message):
@@ -135,6 +131,7 @@ insightful benefits."""
     ):
         self._llm = None
         self.llm_chat = None
+        self._model_type: LLMModelType
         self._name = "llm_api"
         self._version = "0.0.1"
         self._description = "API for LLM"
@@ -154,7 +151,7 @@ insightful benefits."""
         if not os.path.exists(ai_models_path):
             os.makedirs(ai_models_path)
 
-        if model_type in LLMModelType.llm_model_types():
+        if LLMModelType.model_supported(model_type.name):
             self._model = model_type
             self._mode = LLMModelMode.LOCAL
             self.set_llama_model(model_type=self._model, ai_models_path=ai_models_path)
