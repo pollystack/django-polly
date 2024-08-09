@@ -30,8 +30,10 @@ class LLMModelType(Enum):
 
     @staticmethod
     def model_supported(model_type_str):
-        model = LLMModelType(model_type_str)
-        if model in LLMModelType.llm_model_types():
+        if model_type_str is None:
+            return False
+        model: LLMModelType = LLMModelType[model_type_str]
+        if model.name in LLMModelType.llm_model_types():
             return True
         return False
 
@@ -127,7 +129,7 @@ accurate. Give quick, helpful answers. Explain simply. Admit uncertainties fast.
 insightful benefits."""
 
     def __init__(
-            self, system_prompt=None, model_type=LLMModelType.QWEN2_INSTRUCT
+            self, system_prompt=None, model_type: LLMModelType = LLMModelType.QWEN2_INSTRUCT
     ):
         self._llm = None
         self.llm_chat = None
@@ -158,8 +160,8 @@ insightful benefits."""
         else:
             raise ValueError("Model not supported")
 
-    def set_llama_model(self, model_type, ai_models_path):
-        model_path = str(os.path.join(ai_models_path, model_type))
+    def set_llama_model(self, model_type: LLMModelType, ai_models_path):
+        model_path = str(os.path.join(ai_models_path, model_type.value))
         llm = Llama(
             model_path=model_path,
             n_gpu_layers=1,
