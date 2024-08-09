@@ -2,6 +2,7 @@
 import asyncio
 import logging
 import os.path
+from enum import Enum
 from typing import Iterator
 
 from django.conf import settings
@@ -11,13 +12,18 @@ logger = logging.getLogger(__name__)
 
 
 # An Enum of LLM models
-class LLMModelType:
+class LLMModelType(Enum):
     # offline / Local
     MISTRAL_0_1_INSTRUCT = "mistral-7b-instruct-v0.1.Q4_0.gguf"
     META_LLAMA_3_INSTRUCT = "Meta-Llama-3-8B-Instruct.Q8_0.gguf"
     META_LLAMA_3_1_INSTRUCT = "Meta-Llama-3.1-8B-Instruct.Q4_0.gguf"
     PHI_3_MINI_INSTRUCT = "Phi-3-mini-4k-instruct.Q4_0.gguf"
+    QWEN2_INSTRUCT = "Qwen2-500M-Instruct-Q8_0.gguf"
     LLAMA_PRO = "llama-pro-8b.Q8_0.gguf"
+
+    @staticmethod
+    def llm_model_types():
+        values = [e.value for e in LLMModelType]
 
 
 class LLMModelMode:
@@ -32,12 +38,7 @@ class LLMInvoker:
         self.llm_model_type = llm_model_type
 
     def send_message(self, message):
-        if self.llm_model_type in [
-            LLMModelType.META_LLAMA_3_INSTRUCT,
-
-            LLMModelType.META_LLAMA_3_1_INSTRUCT,
-            LLMModelType.MISTRAL_0_1_INSTRUCT,
-        ]:
+        if self.llm_model_type in LLMModelType.llm_model_types():
             answer = self.llm.create_chat_completion(
                 messages=[
                     {
@@ -59,11 +60,7 @@ class LLMInvoker:
             raise ValueError("LLM model type not supported")
 
     def send_message_stream(self, message) -> Iterator[str]:
-        if self.llm_model_type in [
-            LLMModelType.META_LLAMA_3_INSTRUCT,
-            LLMModelType.META_LLAMA_3_1_INSTRUCT,
-            LLMModelType.MISTRAL_0_1_INSTRUCT,
-        ]:
+        if self.llm_model_type in LLMModelType.llm_model_types():
             stream = self.llm(
                 f"Human: {message}\nAssistant: ",
                 max_tokens=4096,
@@ -80,13 +77,7 @@ class LLMInvoker:
 
     async def async_send_message_stream(self, message):
         logger.info(f"Starting message stream for: {message}")
-        if self.llm_model_type in [
-            LLMModelType.META_LLAMA_3_INSTRUCT,
-            LLMModelType.META_LLAMA_3_1_INSTRUCT,
-            LLMModelType.MISTRAL_0_1_INSTRUCT,
-            LLMModelType.PHI_3_MINI_INSTRUCT,
-            LLMModelType.LLAMA_PRO,
-        ]:
+        if self.llm_model_type in LLMModelType.llm_model_types():
             stream = await asyncio.to_thread(
                 self.llm.create_chat_completion,
                 messages=[
@@ -160,20 +151,8 @@ insightful benefits."""
         if not os.path.exists(ai_models_path):
             os.makedirs(ai_models_path)
 
-        if model_type == LLMModelType.META_LLAMA_3_1_INSTRUCT:
-            self._model = LLMModelType.META_LLAMA_3_1_INSTRUCT
-            self._mode = LLMModelMode.LOCAL
-            self.set_llama_model(model_type=self._model, ai_models_path=ai_models_path)
-        elif model_type == LLMModelType.META_LLAMA_3_INSTRUCT:
-            self._model = LLMModelType.META_LLAMA_3_INSTRUCT
-            self._mode = LLMModelMode.LOCAL
-            self.set_llama_model(model_type=self._model, ai_models_path=ai_models_path)
-        elif model_type == LLMModelType.MISTRAL_0_1_INSTRUCT:
-            self._model = LLMModelType.MISTRAL_0_1_INSTRUCT
-            self._mode = LLMModelMode.LOCAL
-            self.set_llama_model(model_type=self._model, ai_models_path=ai_models_path)
-        elif model_type == LLMModelType.PHI_3_MINI_INSTRUCT:
-            self._model = LLMModelType.PHI_3_MINI_INSTRUCT
+        if model_type in LLMModelType.llm_model_types():
+            self._model = model_type
             self._mode = LLMModelMode.LOCAL
             self.set_llama_model(model_type=self._model, ai_models_path=ai_models_path)
         else:

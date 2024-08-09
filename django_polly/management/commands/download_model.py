@@ -13,8 +13,8 @@ class Command(BaseCommand):
         parser.add_argument('model_url', type=str, help='URL of the model file to download')
 
     def handle(self, *args, **options):
-        model_name = options['model_name']
         model_url = options['model_url']
+        model_name = options['model_name']
 
         ai_models_path = getattr(settings, 'AI_MODELS_PATH', None)
         if ai_models_path is None:
@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
         self.stdout.write(f"Downloading model {model_name} from {model_url}")
 
-        response = requests.get(model_url, stream=True)
+        response = requests.get(model_url, stream=True, allow_redirects=True)
         total_size = int(response.headers.get("Content-Length", 0))
 
         with open(model_path, "wb") as file, tqdm(
