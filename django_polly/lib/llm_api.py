@@ -24,6 +24,9 @@ class LLMModelType(Enum):
     @staticmethod
     def llm_model_types():
         values = [e.value for e in LLMModelType]
+        if values is None:
+            return []
+        return values
 
 
 class LLMModelMode:
@@ -128,7 +131,7 @@ accurate. Give quick, helpful answers. Explain simply. Admit uncertainties fast.
 insightful benefits."""
 
     def __init__(
-            self, system_prompt=None, model_type=LLMModelType.MISTRAL_0_1_INSTRUCT
+            self, system_prompt=None, model_type=LLMModelType.QWEN2_INSTRUCT
     ):
         self._llm = None
         self.llm_chat = None
@@ -178,12 +181,12 @@ insightful benefits."""
         )
 
 
-class SingletonPhiLLMConnect:
+class TinyLLMConnect:
     llm = None
     llm_chat = None
 
     def __new__(cls, *args, **kwargs):
         if not cls.llm:
-            cls.llm = LLMConnect(model_type=LLMModelType.PHI_3_MINI_INSTRUCT)
+            cls.llm = LLMConnect(model_type=LLMModelType.QWEN2_INSTRUCT)
             cls.llm_chat = cls.llm.llm_chat
         return cls.llm
