@@ -1,10 +1,13 @@
 from django.db import models
 
+from django_polly.lib.llm_api import LLMModelType
+
 
 class Parrot(models.Model):
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=50)
     age = models.IntegerField(default=0)
+    model = models.CharField(choices=LLMModelType.choices(), default=LLMModelType.QWEN2_INSTRUCT, max_length=255)
 
     def __str__(self):
         return self.name

@@ -37,6 +37,10 @@ class LLMModelType(Enum):
             return True
         return False
 
+    @classmethod
+    def choices(cls):
+        return [(key.value, key.name) for key in cls]
+
 
 class LLMModelMode:
     LOCAL = "LOCAL"
