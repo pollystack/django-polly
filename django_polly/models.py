@@ -49,7 +49,7 @@ class SmartConversation(CommonFieldsModel):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="conversations"
     )
-    title = models.CharField(max_length=255, blank=True)
+    title = models.CharField(max_length=255, blank=True, default="Untitled Smart Conversation")
 
     def __str__(self):
         return f"Conversation {self.id} - {self.title or 'Untitled'}"

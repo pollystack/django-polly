@@ -13,7 +13,7 @@ def smart_gpt_chat(request, conversation_id):
         conversation = SmartConversation.objects.get(id=conversation_id)
     except (ValueError, SmartConversation.DoesNotExist):
         return TemplateResponse(request, 'conversation/not_found.html', status=404)
-    if conversation.user != request.user or request.user.is_superuser:
+    if conversation.user != request.user or not request.user.is_superuser or not request.user.is_staff:
         return TemplateResponse(request, 'conversation/access_denied.html', status=403)
     return render(request, 'conversation/single_chat.html', {'conversation_id': conversation_id,
                                                              'conversation_title': conversation.title})
