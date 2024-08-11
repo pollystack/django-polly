@@ -24,9 +24,15 @@ setup(
         'djangorestframework',
         'drf-spectacular',
         'llama-cpp-python==0.2.87',
-        'channels',  # Add this
-        'asgiref',  # Add this
+        'channels[daphne]',  # This will install both channels and daphne
+        'asgiref',
     ],
+    extras_require={
+        'dev': [
+            'pytest',
+            'pytest-django',
+        ],
+    },
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
