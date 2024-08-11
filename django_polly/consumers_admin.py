@@ -118,6 +118,10 @@ informative and tailored for admin users. You are professional and efficient in 
                 },
             )
             await self.send(text_data=error_html)
+            await self.send(text_data=json.dumps({
+                "type": "assistant_message_complete",
+                "message": "Error response complete"
+            }))
             return
 
         try:
@@ -148,6 +152,12 @@ informative and tailored for admin users. You are professional and efficient in 
                 party=ConversationParty.ASSISTANT,
             )
 
+            # Send completion message
+            await self.send(text_data=json.dumps({
+                "type": "assistant_message_complete",
+                "message": "Response complete"
+            }))
+
         except asyncio.TimeoutError:
             logger.error("Admin operation timed out")
             timeout_message = "Admin operation timed out. Please try again."
@@ -159,6 +169,10 @@ informative and tailored for admin users. You are professional and efficient in 
                 },
             )
             await self.send(text_data=timeout_html)
+            await self.send(text_data=json.dumps({
+                "type": "assistant_message_complete",
+                "message": "Timeout response complete"
+            }))
         except Exception as e:
             logger.exception(f"Error during admin message streaming: {e}")
             error_message = "An error occurred while processing your admin request. Please try again."
@@ -170,3 +184,7 @@ informative and tailored for admin users. You are professional and efficient in 
                 },
             )
             await self.send(text_data=error_html)
+            await self.send(text_data=json.dumps({
+                "type": "assistant_message_complete",
+                "message": "Error response complete"
+            }))
