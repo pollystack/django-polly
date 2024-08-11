@@ -7,5 +7,5 @@ app_name = 'django_polly'
 
 urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
-    path('smart-gpt-chat/', views.chat, name='smart_gpt_chat'),
+    path('smart-gpt-chat/<int:conversation_id>/', views.smart_gpt_chat, name='smart_gpt_chat'),
 ]

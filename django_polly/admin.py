@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Parrot, Trick, Message, SmartConversation
+from django.utils.html import format_html
+from django.urls import reverse
 from django import forms
 
 
@@ -48,12 +50,19 @@ class TrickAdmin(admin.ModelAdmin):
 
 @admin.register(SmartConversation)
 class SmartConversationAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "title", "created_at", "updated_at")
+    list_display = ("id", "user", "title", "created_at", "updated_at", "chat_button")
     list_filter = ("user", "created_at", "updated_at")
     search_fields = ("title",)
     date_hierarchy = "created_at"
     raw_id_fields = ("user",)
     inlines = [MessageInline]
+
+    def chat_button(self, obj):
+        url = reverse('django_polly:smart_gpt_chat', args=[obj.id])
+        return format_html('<a class="button" href="{}" target="_blank">Chat</a>', url)
+
+    chat_button.short_description = 'Chat'
+    chat_button.allow_tags = True
 
 
 @admin.register(Message)
