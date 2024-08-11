@@ -7,7 +7,7 @@ app_name = 'django_polly'
 
 urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
-    path('smart-gpt-chat/', views.chat, name='chat'),
+    path('smart-gpt-chat/', views.smart_gpt_chat, name='chat'),
 ]
 
 websocket_urlpatterns = [
