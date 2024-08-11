@@ -17,7 +17,7 @@ setup(
     author_email='info@pollystack.com',
     # ... other parameters ...
     install_requires=[
-        'Django>=3.2',
+        'Django>=4.0',
         'requests',
         'tqdm',
         'django-json-widget',
