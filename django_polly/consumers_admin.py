@@ -3,7 +3,9 @@ import json
 import logging
 import uuid
 
+from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.template.loader import render_to_string
 
@@ -11,6 +13,8 @@ from django_polly.lib.llm_api import TinyLLMConnect
 from django_polly.models import SmartConversation, Message, ConversationParty
 
 logger = logging.getLogger(__name__)
+
+User = get_user_model()
 
 
 class SmartGPTConsumerAdmin(AsyncWebsocketConsumer):
@@ -25,32 +29,63 @@ informative and tailored for admin users. You are professional and efficient in 
         self.document_message = None
         self.llm_connect = None
         self.conversation = None
+        self.user = None
 
-    @sync_to_async
+    @database_sync_to_async
     def init_chat_context(self, user_id, conversation_id=None):
-        self.system_prompt = (
-            self.system_prompt + ", You are now in an admin chat session with the user."
-        )
-        try:
-            self.llm_connect = TinyLLMConnect()
-            if not self.llm_connect.llm_chat:
-                raise ValueError("LLM chat not initialized properly")
+        self.user = User.objects.get(id=user_id)
+        if conversation_id:
+            self.conversation = SmartConversation.objects.get(id=conversation_id)
+        else:
+            self.conversation = SmartConversation.objects.create(user_id=user_id)
 
-            if conversation_id:
-                self.conversation = SmartConversation.objects.get(id=conversation_id)
-            else:
-                self.conversation = SmartConversation.objects.create(user_id=user_id)
+        self.llm_connect = TinyLLMConnect()
+        if not self.llm_connect.llm_chat:
+            raise ValueError("LLM chat not initialized properly")
 
-        except Exception as e:
-            logger.error(f"Failed to initialize LLMConnect or SmartConversation: {e}")
-            self.llm_connect = None
-            self.conversation = None
+        # If it's a new conversation, add the greeting
+        if self.conversation.messages.count() == 0:
+            greeting = f"Hello {self.user.first_name}, what can I help you with today?"
+            Message.objects.create(
+                conversation=self.conversation,
+                content=greeting,
+                party=ConversationParty.ASSISTANT,
+            )
+
+    @database_sync_to_async
+    def get_conversation_messages(self):
+        return list(self.conversation.messages.order_by('created_at').values('content', 'party'))
 
     async def connect(self):
         await self.accept()
-        user_id = self.scope["query_string"].decode().split("user_id=")[1]
-        conversation_id = self.scope["url_route"]["kwargs"].get("conversation_id")
-        await self.init_chat_context(user_id, conversation_id)
+
+        query_string = self.scope.get("query_string", b"").decode()
+        query_params = dict(param.split('=') for param in query_string.split('&') if param)
+
+        user_id = query_params.get("user_id")
+        conversation_id = query_params.get("conversation_id")
+        if not user_id:
+            await self.close(code=4000)
+            return
+
+        try:
+            await self.init_chat_context(user_id, conversation_id)
+        except Exception as e:
+            logger.error(f"Failed to initialize chat context: {e}")
+            await self.close(code=4002)
+            return
+
+        # Load and send existing messages
+        messages = await self.get_conversation_messages()
+        for message in messages:
+            message_html = render_to_string(
+                "conversation/ws/chat_message.html",
+                {
+                    "message_text": message['content'],
+                    "is_system": message['party'] == ConversationParty.ASSISTANT,
+                },
+            )
+            await self.send(text_data=message_html)
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -96,7 +131,7 @@ informative and tailored for admin users. You are professional and efficient in 
             response_chunks = []
             async with asyncio.timeout(360):  # 360 seconds timeout, 6 minutes
                 async for chunk in self.llm_connect.llm_chat.async_send_message_stream(
-                    message_text
+                        message_text
                 ):
                     formatted_chunk = chunk.replace("\n", "<br>")
                     await self.send(
