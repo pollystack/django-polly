@@ -21,6 +21,8 @@ setup(
         'djangorestframework',
         'drf-spectacular',
         'llama-cpp-python==0.2.87',
+        'channels',  # Add this
+        'asgiref',  # Add this
     ],
     classifiers=[
         'Environment :: Web Environment',
