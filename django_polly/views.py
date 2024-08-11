@@ -4,11 +4,19 @@ from django.views.generic import TemplateView
 from django.shortcuts import render
 from django.template.response import TemplateResponse
 
-from .models import Parrot, Trick
+from .models import Parrot, Trick, SmartConversation
 
 
 def smart_gpt_chat(request, conversation_id):
-    return render(request, 'conversation/single_chat.html', {'conversation_id': conversation_id})
+    try:
+        conversation_id = int(conversation_id)
+        conversation = SmartConversation.objects.get(id=conversation_id)
+    except (ValueError, SmartConversation.DoesNotExist):
+        return TemplateResponse(request, 'conversation/not_found.html', status=404)
+    if conversation.user != request.user or request.user.is_superuser:
+        return TemplateResponse(request, 'conversation/access_denied.html', status=403)
+    return render(request, 'conversation/single_chat.html', {'conversation_id': conversation_id,
+                                                             'conversation_title': conversation.title})
 
 
 class DashboardView(TemplateView):
