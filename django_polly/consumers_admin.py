@@ -61,7 +61,7 @@ and informative. You are very polite and respectful. You are very patient and ca
         )
         message_id = f"message-{uuid.uuid4().hex}"
         system_message_html = render_to_string(
-            "chat_demo/ws/chat_message.html",
+            "conversation/ws/chat_message.html",
             {"message_text": "", "is_system": True, "message_id": message_id},
         )
         await self.send(text_data=system_message_html)
