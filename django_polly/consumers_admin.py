@@ -7,7 +7,7 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.template.loader import render_to_string
 
-from lib.llm_api import LLMConnect, LLMModelType, TinyLLMConnect
+from django_polly.lib.llm_api import TinyLLMConnect
 
 logger = logging.getLogger(__name__)
 

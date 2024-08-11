@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Parrot, Trick
+from .models import Parrot, Trick, Message, SmartConversation
 from django import forms
 
 
@@ -12,8 +12,16 @@ class ParrotAdminForm(forms.ModelForm):
         fields = '__all__'
 
 
+# Inlines
 class TrickInline(admin.TabularInline):
     model = Trick  # Assuming you have a Trick model related to Parrot
+
+
+class MessageInline(admin.TabularInline):
+    model = Message
+    extra = 0
+    readonly_fields = ("party", "content", "created_at", "updated_at")
+    ordering = ("created_at",)
 
 
 @admin.register(Parrot)
@@ -36,3 +44,29 @@ class TrickAdmin(admin.ModelAdmin):
     list_display = ('name', 'parrot', 'difficulty', 'external_id', 'created_at', 'updated_at')
     list_filter = ('difficulty', 'created_at', 'updated_at')
     search_fields = ('name', 'parrot__name', 'external_id')
+
+
+@admin.register(SmartConversation)
+class SmartConversationAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "title", "created_at", "updated_at")
+    list_filter = ("user", "created_at", "updated_at")
+    search_fields = ("title",)
+    date_hierarchy = "created_at"
+    raw_id_fields = ("user",)
+    inlines = [MessageInline]
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "conversation",
+        "party",
+        "content",
+        "created_at",
+        "updated_at",
+    )
+    list_filter = ("conversation", "party", "created_at", "updated_at")
+    search_fields = ("content",)
+    date_hierarchy = "created_at"
+    raw_id_fields = ("conversation",)

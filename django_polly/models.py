@@ -40,16 +40,27 @@ class Trick(CommonFieldsModel):
         return f"{self.name} (performed by {self.parrot.name})"
 
 
-class SmartConversation(CommonFieldsModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
 class ConversationParty(models.TextChoices):
     USER = 'USER', 'User'
     ASSISTANT = 'ASSISTANT', 'Assistant'
 
 
+class SmartConversation(CommonFieldsModel):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="conversations"
+    )
+    title = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"Conversation {self.id} - {self.title or 'Untitled'}"
+
+
 class Message(CommonFieldsModel):
-    conversation = models.ForeignKey(SmartConversation, on_delete=models.CASCADE)
+    conversation = models.ForeignKey(
+        SmartConversation, on_delete=models.CASCADE, related_name="messages"
+    )
     content = models.TextField()
     party = models.CharField(max_length=10, choices=ConversationParty.choices)
+
+    def __str__(self):
+        return f"{self.party}: {self.content[:50]}..."

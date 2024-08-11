@@ -6,7 +6,7 @@ from django.template.response import TemplateResponse
 from .models import Parrot, Trick
 
 
-def smart_gpt_chat(request):
+def chat(request):
     return TemplateResponse(request, "conversation/single_chat.html")
 
 
