@@ -4,6 +4,9 @@ setup(
     name='django-polly',
     version='0.0.1',
     packages=find_packages(exclude=['tests*']),
+    package_data={
+        'django_polly': ['templates/**/*.html', 'static/**/*'],
+    },
     include_package_data=True,
     license='AGPL-3.0',
     description='A Django app for building parrot configurations',

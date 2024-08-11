@@ -1,8 +1,13 @@
 from django.db import models
 from django.db.models import Avg
 from django.views.generic import TemplateView
+from django.template.response import TemplateResponse
 
 from .models import Parrot, Trick
+
+
+def chat(request):
+    return TemplateResponse(request, "conversation/single_chat.html")
 
 
 class DashboardView(TemplateView):

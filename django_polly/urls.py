@@ -1,9 +1,15 @@
 from django.urls import path
-from .views import DashboardView
+from django_polly import views
+from django_polly import consumers
+from django_polly.views import DashboardView
 
-app_name = 'django_polly'  # This is important for namespacing
+app_name = 'django_polly'
 
 urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
-    # ... other URL patterns ...
+    path('smart-gpt-chat/', views.chat, name='chat'),
+]
+
+websocket_urlpatterns = [
+    path('ws/smart-gpt/<int:conversation_id>/', consumers.SmartGPTConsumer.as_asgi(), name='smart_gpt'),
 ]
