@@ -10,8 +10,8 @@ setup(
     include_package_data=True,
     license='AGPL-3.0',
     description='A Django app for building parrot configurations',
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
+    long_description=open('README.rst').read(),
+    long_description_content_type='text/x-rst',
     url='https://github.com/pollystack/django-polly',
     author='Pollystack Team',
     author_email='info@pollystack.com',
@@ -31,6 +31,15 @@ setup(
         'dev': [
             'pytest',
             'pytest-django',
+
+        ],
+        'test': [
+            'pytest',
+            'pytest-django',
+            'pytest-asyncio',
+            'tox',
+            'coverage',
+            'pytest-cov',
         ],
     },
     classifiers=[
