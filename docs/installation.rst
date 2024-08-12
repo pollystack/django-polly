@@ -1,83 +1,96 @@
 Installation
-============
-
-This guide will walk you through the process of installing Django Polly and setting it up in your Django project.
-
-Requirements
 ------------
 
-Django Polly requires:
-
-* Python 3.8 or higher
-* Django 3.2 or higher
-* Channels 3.0 or higher
-
-Installing Django Polly
------------------------
-
-1. Install Django Polly using pip:
+1. Install django-polly and its dependencies:
 
    .. code-block:: bash
 
-      pip install django-polly
+       pip install django-polly
 
-2. Add 'django_polly' to your INSTALLED_APPS in your Django settings file:
-
-   .. code-block:: python
-
-      INSTALLED_APPS = [
-          ...
-          'django_polly',
-          'channels',
-          ...
-      ]
-
-3. Set up the AI_MODELS_PATH in your settings:
+2. Add "django_polly" and its dependencies to your INSTALLED_APPS setting in settings.py:
 
    .. code-block:: python
 
-      AI_MODELS_PATH = BASE_DIR / 'ai_models'
+       INSTALLED_APPS = [
+           'daphne',  # Add this before all django apps
+           'django.contrib.admin',
+           'django.contrib.auth',
+           'django.contrib.contenttypes',
+           'django.contrib.sessions',
+           'django.contrib.messages',
+           'django.contrib.staticfiles',
+           'django_polly',  # Add this after all django apps
+           'rest_framework', # Required for API views
+           'django_json_widget', # Required for JSON widget in admin (optional)
+           # ... your other apps ...
+       ]
 
-4. Configure ASGI in your project's asgi.py file:
-
-   .. code-block:: python
-
-      import os
-      from django.core.asgi import get_asgi_application
-      from channels.routing import ProtocolTypeRouter
-      from django_polly.routing import polly_asgi_routes
-
-      os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project.settings')
-
-      django_asgi_app = get_asgi_application()
-      polly_asgi_routes["http"] = django_asgi_app
-
-      application = ProtocolTypeRouter(polly_asgi_routes)
-
-5. Add Django Polly URLs to your project's urls.py:
+3. Configure ASGI in your project's asgi.py:
 
    .. code-block:: python
 
-      from django.urls import path, include
+       import os
+       from django.core.asgi import get_asgi_application
+       from channels.routing import ProtocolTypeRouter
+       from django_polly.routing import polly_asgi_routes
 
-      urlpatterns = [
-          ...
-          path('polly/', include('django_polly.urls')),
-          ...
-      ]
+       os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project.settings')
 
-6. Run migrations to create the necessary database tables:
+       # Get the Django ASGI application
+       django_asgi_app = get_asgi_application()
+
+       # Use the Django ASGI application for HTTP requests
+       polly_asgi_routes["http"] = django_asgi_app
+
+       # Create the final ASGI application
+       application = ProtocolTypeRouter(polly_asgi_routes)
+
+4. Update your settings.py with the following:
+
+   .. code-block:: python
+
+       # Add this to specify the ASGI application
+       ASGI_APPLICATION = 'your_project.asgi.application'
+       WSGI_APPLICATION = 'your_project.wsgi.application'
+
+       # Add this to for daphne
+       CHANNEL_LAYERS = {
+           'default': {
+               'BACKEND': 'channels.layers.InMemoryChannelLayer'
+           }
+       }
+
+       AI_MODELS_PATH = BASE_DIR / 'ai_models' # Add this to specify the path to store AI models
+
+5. Include the django-polly URLconf in your project urls.py:
+
+   .. code-block:: python
+
+       from django.contrib import admin
+       from django.urls import path, include
+
+       urlpatterns += [
+           path('admin/', admin.site.urls),
+           path('polly/', include('django_polly.urls')),
+           # ... other URL patterns ...
+       ]
+
+6. Run migrations:
 
    .. code-block:: bash
 
-      python manage.py migrate
+       python manage.py migrate
 
-Verifying Installation
-----------------------
+7. Download an AI model (example using Qwen2):
 
-To verify that Django Polly is installed correctly, start your Django development server and navigate to the admin interface. You should see new sections for managing Parrots and SmartConversations.
+   .. code-block:: bash
 
-Next Steps
-----------
+       python manage.py download_model "Qwen2-500M-Instruct-Q8_0.gguf" "https://huggingface.co/lmstudio-community/Qwen2-500M-Instruct-GGUF/resolve/main/Qwen2-500M-Instruct-Q8_0.gguf"
 
-Now that you have Django Polly installed, you're ready to start building AI-powered features in your Django project. Check out our :doc:`tutorial/index` for a step-by-step guide on creating your first AI-powered application with Django Polly.
+8. Start the development server:
+
+   .. code-block:: bash
+
+       python manage.py runserver
+
+   Visit http://127.0.0.1:8000/admin/ to create parrots and http://127.0.0.1:8000/polly/ to use django-polly.
