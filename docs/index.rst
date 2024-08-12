@@ -32,14 +32,9 @@ Topics
    introduction
    installation
    tutorial/index
-   topics/parrots
-   topics/smart_conversations
-   topics/llm_api
-   topics/websockets
-   topics/databases
-   topics/authentication
-   topics/security
-   topics/testing
+   topics/consumers
+   topics/routing
+   topics/models
    deploying
    topics/troubleshooting
 
