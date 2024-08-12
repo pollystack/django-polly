@@ -3,28 +3,35 @@ Django Polly
 
 .. image:: https://img.shields.io/pypi/v/django-polly.svg
     :target: https://pypi.python.org/pypi/django-polly
+    :alt: PyPI Version
 
 .. image:: https://img.shields.io/pypi/l/django-polly.svg
     :target: https://pypi.python.org/pypi/django-polly
+    :alt: License
 
 .. image:: https://img.shields.io/pypi/pyversions/django-polly.svg
     :target: https://pypi.python.org/pypi/django-polly
+    :alt: Python Versions
 
 .. image:: https://readthedocs.org/projects/django-polly/badge/?version=latest
     :target: https://django-polly.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 Django Polly enhances Django with Language Learning Model (LLM) capabilities, enabling AI-powered conversations, task automation, and other intelligent features in your Django projects. It uses familiar Django patterns and provides a flexible framework for customizing AI behaviors and supporting various LLM backends.
 
 Features
 --------
 
-* LLM Management: Create and configure LLM instances (parrots)
-* SmartConversations: Engage in AI-powered conversations
-* WebSocket Support: Real-time communication for chat interfaces
-* Admin Interface: Easily manage parrots and conversations
-* Extensible: Designed to work with various LLM backends
+* **LLM Management**: Create and configure LLM instances (parrots)
+* **SmartConversations**: Engage in AI-powered conversations
+* **WebSocket Support**: Real-time communication for chat interfaces
+* **Admin Interface**: Easily manage parrots and conversations
+* **Extensible**: Designed to work with various LLM backends
 
-Documentation, installation, and getting started instructions are at
+Documentation
+-------------
+
+For full documentation, including installation and getting started instructions, visit:
 https://django-polly.readthedocs.io
 
 Quick Start
@@ -104,7 +111,7 @@ Django Polly supports Python 3.8 and up, and is compatible with Django 4.2 and 5
 Contributing
 ------------
 
-To learn more about contributing, please read our `contributing docs <https://django-polly.readthedocs.io/en/latest/contributing.html>`_.
+We welcome contributions! To learn more about contributing, please read our `contributing docs <https://django-polly.readthedocs.io/en/latest/contributing.html>`_.
 
 Support
 -------
