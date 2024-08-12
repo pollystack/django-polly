@@ -31,27 +31,33 @@ Features
 Documentation
 -------------
 
-For full documentation, including installation and getting started instructions, visit:
-https://django-polly.readthedocs.io
+For full documentation, visit: https://django-polly.readthedocs.io
 
 Quick Start
 -----------
 
-1. Install django-polly:
+1. Install django-polly and its dependencies:
 
    .. code-block:: bash
 
        pip install django-polly
 
-2. Add "django_polly" and its dependencies to your INSTALLED_APPS setting:
+2. Add "django_polly" and its dependencies to your INSTALLED_APPS setting in settings.py:
 
    .. code-block:: python
 
        INSTALLED_APPS = [
-           ...
-           'django_polly',
-           'rest_framework',
-           'django_json_widget',
+           'daphne',  # Add this before all django apps
+           'django.contrib.admin',
+           'django.contrib.auth',
+           'django.contrib.contenttypes',
+           'django.contrib.sessions',
+           'django.contrib.messages',
+           'django.contrib.staticfiles',
+           'django_polly',  # Add this after all django apps
+           'rest_framework', # Required for API views
+           'django_json_widget', # Required for JSON widget in admin (optional)
+           # ... your other apps ...
        ]
 
 3. Configure ASGI in your project's asgi.py:
@@ -65,37 +71,58 @@ Quick Start
 
        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project.settings')
 
+       # Get the Django ASGI application
        django_asgi_app = get_asgi_application()
+
+       # Use the Django ASGI application for HTTP requests
        polly_asgi_routes["http"] = django_asgi_app
 
+       # Create the final ASGI application
        application = ProtocolTypeRouter(polly_asgi_routes)
 
-4. Update your settings.py:
+4. Update your settings.py with the following:
 
    .. code-block:: python
 
+       # Add this to specify the ASGI application
        ASGI_APPLICATION = 'your_project.asgi.application'
+       WSGI_APPLICATION = 'your_project.wsgi.application'
+
+       # Add this for daphne
        CHANNEL_LAYERS = {
            'default': {
                'BACKEND': 'channels.layers.InMemoryChannelLayer'
            }
        }
-       AI_MODELS_PATH = os.path.join(BASE_DIR, "ai_models")
+
+       AI_MODELS_PATH = BASE_DIR / 'ai_models' # Add this to specify the path to store AI models
 
 5. Include the django-polly URLconf in your project urls.py:
 
    .. code-block:: python
 
-       path('polly/', include('django_polly.urls')),
+       from django.contrib import admin
+       from django.urls import path, include
 
-6. Run migrations and download a model:
+       urlpatterns = [
+           path('admin/', admin.site.urls),
+           path('polly/', include('django_polly.urls')),
+           # ... other URL patterns ...
+       ]
+
+6. Run migrations:
 
    .. code-block:: bash
 
        python manage.py migrate
+
+7. Download an AI model (example using Qwen2):
+
+   .. code-block:: bash
+
        python manage.py download_model "Qwen2-500M-Instruct-Q8_0.gguf" "https://huggingface.co/lmstudio-community/Qwen2-500M-Instruct-GGUF/resolve/main/Qwen2-500M-Instruct-Q8_0.gguf"
 
-7. Start the development server and begin using django-polly:
+8. Start the development server:
 
    .. code-block:: bash
 
@@ -119,13 +146,6 @@ Support
 If you're having issues, please let us know by opening an issue on our `GitHub repository <https://github.com/pollystack/django-polly/issues>`_.
 
 For larger discussions, join our `mailing list <mailto:oss@pollystack.com>`_.
-
-Maintenance and Security
-------------------------
-
-To report security issues, please contact security@pollystack.com. For more information on our security process, see our documentation.
-
-Maintenance is overseen by the Pollystack team. We operate on a best-effort basis and prioritize security issues.
 
 License
 -------
