@@ -70,4 +70,4 @@ class TestMessageModel:
             content="A very long message that should be truncated in the string representation",
             party=ConversationParty.ASSISTANT
         )
-        assert str(message) == "ASSISTANT: A very long message that should be truncated in..."
+        assert str(message) == "ASSISTANT: A very long message that should be truncated in th..."

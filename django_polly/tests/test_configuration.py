@@ -28,7 +28,7 @@ def test_ai_models_path():
 
 @pytest.mark.django_db
 def test_asgi_routing():
-    from your_project.asgi import application
+    from .helpers.asgi import application
     assert isinstance(application, ProtocolTypeRouter)
     assert 'http' in application.application_mapping
     assert 'websocket' in application.application_mapping
