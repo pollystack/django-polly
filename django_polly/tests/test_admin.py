@@ -1,6 +1,9 @@
 import pytest
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
+from django.contrib.messages.storage.fallback import FallbackStorage
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.test import RequestFactory
 from django_polly.admin import ParrotAdmin, SmartConversationAdmin
 from django_polly.models import Parrot, SmartConversation
 
@@ -8,7 +11,21 @@ User = get_user_model()
 
 
 class MockRequest:
-    pass
+    def __init__(self):
+        self.session = {}
+        self._messages = FallbackStorage(self)
+
+
+def get_request_with_session():
+    request = RequestFactory().get('/')
+    middleware = SessionMiddleware(lambda x: None)
+    middleware.process_request(request)
+    request.session.save()
+
+    messages = FallbackStorage(request)
+    setattr(request, '_messages', messages)
+
+    return request
 
 
 @pytest.mark.django_db
@@ -22,7 +39,7 @@ class TestParrotAdmin:
         return [Parrot.objects.create(name=f"Parrot{i}", color="Red", age=i) for i in range(3)]
 
     def test_make_colorful_action(self, admin, parrots):
-        request = MockRequest()
+        request = get_request_with_session()
         queryset = Parrot.objects.all()
 
         admin.make_colorful(request, queryset)
