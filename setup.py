@@ -31,15 +31,16 @@ setup(
         'dev': [
             'pytest',
             'pytest-django',
-
+            'pytest-cov',
+            'pytest-asyncio',
         ],
         'test': [
             'pytest',
             'pytest-django',
             'pytest-asyncio',
+            'pytest-cov',
             'tox',
             'coverage',
-            'pytest-cov',
         ],
     },
     classifiers=[
