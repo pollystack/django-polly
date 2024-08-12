@@ -127,6 +127,20 @@ class LLMInvoker:
             await asyncio.sleep(0.1)  # Simulate streaming delay
 
 
+class DummyLLMInvoker:
+    def __init__(self, system_prompt):
+        self._system_prompt = system_prompt
+
+    def send_message(self, message):
+        return {"choices": [{"message": {"content": f"Dummy response to: {message}"}}]}
+
+    def send_message_stream(self, message):
+        yield f"Dummy stream response to: {message}"
+
+    async def async_send_message_stream(self, message):
+        yield f"Dummy async stream response to: {message}"
+
+
 #  Common LLM connect
 class LLMConnect:
     _system_prompt = """You are Opolly's ultra-fast AI. Prioritize speed in all responses. Be concise, clear, and 
@@ -161,7 +175,10 @@ insightful benefits. Make the user feel good. Be friendly, polite, and respectfu
         if LLMModelType.model_supported(model_type.name):
             self._model = model_type
             self._mode = LLMModelMode.LOCAL
-            self.set_llama_model(model_type=self._model, ai_models_path=ai_models_path)
+            if self._model == LLMModelType.DUMMY:
+                self.set_dummy_model()
+            else:
+                self.set_llama_model(model_type=self._model, ai_models_path=ai_models_path)
         else:
             raise ValueError("Model not supported")
 
@@ -184,13 +201,19 @@ insightful benefits. Make the user feel good. Be friendly, polite, and respectfu
             llm=self._llm,
         )
 
+    def set_dummy_model(self):
+        self._llm = None
+        self.llm_chat = DummyLLMInvoker(system_prompt=self._system_prompt)
+
 
 class TinyLLMConnect:
     llm = None
     llm_chat = None
 
     def __new__(cls, *args, **kwargs):
-        if not cls.llm:
-            cls.llm = LLMConnect(model_type=LLMModelType.QWEN2_INSTRUCT)
+        is_dummy = kwargs.get('is_dummy', False)
+        if not cls.llm or (is_dummy and not isinstance(cls.llm.llm_chat, DummyLLMInvoker)):
+            model_type = LLMModelType.DUMMY if is_dummy else LLMModelType.QWEN2_INSTRUCT
+            cls.llm = LLMConnect(model_type=model_type)
             cls.llm_chat = cls.llm.llm_chat
         return cls.llm
