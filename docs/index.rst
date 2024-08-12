@@ -37,8 +37,6 @@ Topics
    topics/models
    deploying
    topics/troubleshooting
-   releases/index
-   support
 
 Reference
 ---------
