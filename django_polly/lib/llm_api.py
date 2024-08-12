@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 # An Enum of LLM models
 class LLMModelType(Enum):
     # offline / Local
+    DUMMY = "dummy.gguf"
     MISTRAL_0_1_INSTRUCT = "mistral-7b-instruct-v0.1.Q4_0.gguf"
     META_LLAMA_3_INSTRUCT = "Meta-Llama-3-8B-Instruct.Q8_0.gguf"
     META_LLAMA_3_1_INSTRUCT = "Meta-Llama-3.1-8B-Instruct.Q4_0.gguf"

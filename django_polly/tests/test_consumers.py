@@ -3,6 +3,7 @@ from channels.testing import WebsocketCommunicator
 from django.contrib.auth import get_user_model
 from django_polly.consumers import SmartGPTConsumer
 from django_polly.models import SmartConversation
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -12,27 +13,32 @@ User = get_user_model()
 class TestSmartGPTConsumer:
     @pytest.fixture
     async def user(self):
-        return await User.objects.create_user(username='testuser', password='12345')
+        return await User.objects.acreate(username='testuser', password='12345')
 
     @pytest.fixture
     async def conversation(self, user):
-        return await SmartConversation.objects.create(user=user, title="Test Conversation")
+        return await SmartConversation.objects.acreate(user=user, title="Test Conversation")
 
     async def test_connect(self, user, conversation):
+        application = SmartGPTConsumer.as_asgi()
+        url = reverse('django_polly:smart_gpt', kwargs={'conversation_id': conversation.id})
         communicator = WebsocketCommunicator(
-            SmartGPTConsumer.as_asgi(),
-            f"/polly/ws/smart-gpt/{conversation.id}/?user_id={user.id}"
+            application,
+            f"{url}?user_id={user.id}",
         )
         connected, _ = await communicator.connect()
         assert connected
         await communicator.disconnect()
 
     async def test_receive_message(self, user, conversation):
+        application = SmartGPTConsumer.as_asgi()
+        url = reverse('django_polly:smart_gpt', kwargs={'conversation_id': conversation.id})
         communicator = WebsocketCommunicator(
-            SmartGPTConsumer.as_asgi(),
-            f"/polly/ws/smart-gpt/{conversation.id}/?user_id={user.id}"
+            application,
+            f"{url}?user_id={user.id}",
         )
-        await communicator.connect()
+        connected, _ = await communicator.connect()
+        assert connected
 
         await communicator.send_json_to({"message": "Hello, AI!"})
         response = await communicator.receive_json_from()

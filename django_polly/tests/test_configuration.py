@@ -12,7 +12,7 @@ def test_installed_apps():
 
 def test_asgi_application():
     assert hasattr(settings, 'ASGI_APPLICATION')
-    assert settings.ASGI_APPLICATION == 'your_project.asgi.application'
+    assert settings.ASGI_APPLICATION == 'example_project.asgi.application'
 
 
 def test_channel_layers():

@@ -15,13 +15,14 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    'daphne',  # Add this
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_polly',
+    'django_polly',  # Add this
     'rest_framework',
     'django_json_widget',
 ]
@@ -56,6 +57,13 @@ TEMPLATES = [
         },
     },
 ]
+
+# ADD THIS LINE
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 DATABASES = {
     'default': {
