@@ -16,9 +16,10 @@ Projects
 Django Polly is comprised of several components:
 
 * `Django Polly <https://github.com/pollystack/django-polly/>`_, the main Django integration layer
-* `LLM API <https://github.com/pollystack/django-polly/blob/main/django_polly/lib/llm_api.py>`_, the core LLM interaction library
 * `Channels Integration <https://github.com/pollystack/django-polly/blob/main/django_polly/consumers.py>`_, for real-time communication
-* `LLM Integration (via llama-cpp-python) <https://github.com/pollystack/django-polly/blob/main/django_polly/lib/llm_api.py>`_, for connecting to LLM backends
+* `LLM Integration API (via llama-cpp-python) <https://github.com/pollystack/django-polly/blob/main/django_polly/lib/llm_api.py>`_, for connecting to LLM backends
+* `Django Admin UI <https://github.com/pollystack/django-polly/blob/main/django_polly/admin.py>`_, for managing Parrots and conversations
+* Smart Chat UI View `https://[hostname:port]/polly/smart-gpt-chat/<int:conversation_id`, for interacting with Parrots in real-time ia inbuilt Chat UI
 This documentation covers the system as a whole; individual release notes and instructions can be found in the repository.
 
 .. _topics:
