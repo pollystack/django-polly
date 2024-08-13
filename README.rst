@@ -13,13 +13,18 @@ Django Polly
     :target: https://pypi.python.org/pypi/django-polly
     :alt: Python Versions
 
+.. image:: https://readthedocs.org/projects/django-polly/badge/?version=latest
+    :target: https://django-polly.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 .. image:: https://github.com/pollystack/django-polly/actions/workflows/tests.yml/badge.svg
     :target: https://github.com/pollystack/django-polly/actions/workflows/tests.yml
     :alt: Tests
 
-.. image:: https://readthedocs.org/projects/django-polly/badge/?version=latest
-    :target: https://django-polly.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
+.. image:: https://github.com/pollystack/django-polly/actions/workflows/publish-to-pypi.yml/badge.svg
+    :target: https://github.com/pollystack/django-polly/actions/workflows/publish-to-pypi.yml
+    :alt: Publish Python 🐍 distribution 📦 to PyPI
+
 
 Django Polly enhances Django with Language Learning Model (LLM) capabilities, enabling AI-powered conversations, task automation, and other intelligent features in your Django projects. It uses familiar Django patterns and provides a flexible framework for customizing AI behaviors and supporting various LLM backends.
 

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-polly',
-    version='0.0.1',
+    version='0.0.4',
     packages=find_packages(exclude=['tests*']),
     package_data={
         'django_polly': ['templates/**/*.html', 'static/**/*'],
