@@ -5,8 +5,8 @@ Django Polly
     :target: https://pypi.python.org/pypi/django-polly
     :alt: PyPI Version
 
-.. image:: https://img.shields.io/pypi/l/django-polly.svg
-    :target: https://pypi.python.org/pypi/django-polly
+.. image:: https://img.shields.io/badge/License-AGPL--3.0-blue.svg
+    :target: https://www.gnu.org/licenses/agpl-3.0
     :alt: License
 
 .. image:: https://img.shields.io/pypi/pyversions/django-polly.svg
