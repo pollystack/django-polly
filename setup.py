@@ -15,7 +15,6 @@ setup(
     url='https://github.com/pollystack/django-polly',
     author='Pollystack Team',
     author_email='info@pollystack.com',
-    # ... other parameters ...
     install_requires=[
         'Django>=4.0',
         'requests',
@@ -57,7 +56,7 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
-        'Topic :: Software Development :: Libraries :: LLM Management',
+        'Topic :: Scientific/Engineering :: Artificial Intelligence',
     ],
     cmake_args=['-DGGML_BLAS=ON', '-DGGML_BLAS_VENDOR=OpenBLAS'],
 )
