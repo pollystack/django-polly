@@ -18,7 +18,7 @@ Django Polly is comprised of several components:
 * `Django Polly <https://github.com/pollystack/django-polly/>`_, the main Django integration layer
 * `LLM API <https://github.com/pollystack/django-polly/blob/main/django_polly/lib/llm_api.py>`_, the core LLM interaction library
 * `Channels Integration <https://github.com/pollystack/django-polly/blob/main/django_polly/consumers.py>`_, for real-time communication
-
+* `LLM Integration (via llama-cpp-python) <https://github.com/pollystack/django-polly/blob/main/django_polly/lib/llm_api.py>`_, for connecting to LLM backends
 This documentation covers the system as a whole; individual release notes and instructions can be found in the repository.
 
 .. _topics:
