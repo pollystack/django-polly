@@ -1,7 +1,7 @@
 Django Polly
 ============
 
-.. image:: https://img.shields.io/pypi/v/django-polly.svg
+.. image:: https://img.shields.io/pypi/v/django-polly.svg?color=blue
     :target: https://pypi.python.org/pypi/django-polly
     :alt: PyPI Version
 
