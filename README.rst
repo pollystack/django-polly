@@ -61,6 +61,18 @@ Smart Chat UI
    :alt: Smart Chat UI
    :width: 600px
 
+Usage
+-----
+
+Smart Chat UI
+^^^^^^^^^^^^^
+
+To interact with Parrots in real-time using the built-in Chat UI, navigate to:
+
+``https://[hostname:port]/polly/smart-gpt-chat/<int:conversation_id>``
+
+Replace ``[hostname:port]`` with your server's hostname and port, and ``<int:conversation_id>`` with the ID of the conversation you want to interact with.
+
 Documentation
 -------------
 
