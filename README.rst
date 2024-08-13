@@ -37,6 +37,30 @@ Features
 * **Admin Interface**: Easily manage parrots and conversations
 * **Extensible**: Designed to work with various LLM backends
 
+Screenshots
+-----------
+
+Django Admin Parrot UI
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://raw.githubusercontent.com/pollystack/django-polly/main/docs/images/admin_parrot_ui.png
+   :alt: Django Admin Parrot UI
+   :width: 600px
+
+Smart Conversations Table UI
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://raw.githubusercontent.com/pollystack/django-polly/main/docs/images/smart_conversations_ui.png
+   :alt: Smart Conversations Table UI
+   :width: 600px
+
+Smart Chat UI
+^^^^^^^^^^^^^
+
+.. image:: https://raw.githubusercontent.com/pollystack/django-polly/main/docs/images/smart_chat_ui.png
+   :alt: Smart Chat UI
+   :width: 600px
+
 Documentation
 -------------
 
