@@ -8,7 +8,7 @@ Django Polly builds upon Django's powerful web framework, adding seamless LLM in
 To get started with Django Polly, read our :doc:`introduction`, which will walk you through how things work.
 
 .. note::
-   This is documentation for the **0.0.6 series** of Django Polly. As this is a new project, be sure to check for updates regularly.
+   This is documentation for the **0.0.5 series** of Django Polly. As this is a new project, be sure to check for updates regularly.
 
 Projects
 --------
