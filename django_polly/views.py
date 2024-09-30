@@ -3,8 +3,9 @@ from django.db.models import Avg
 from django.views.generic import TemplateView
 from django.shortcuts import render
 from django.template.response import TemplateResponse
+from django.http import HttpResponseForbidden, HttpResponseNotFound
 
-from .models import Parrot, Trick, SmartConversation
+from .models import Parrot, Trick, SmartConversation, APIKey
 
 
 def smart_gpt_chat(request, conversation_id):
@@ -15,6 +16,27 @@ def smart_gpt_chat(request, conversation_id):
         return TemplateResponse(request, 'conversation/not_found.html', status=404)
     if conversation.user != request.user or not request.user.is_superuser or not request.user.is_staff:
         return TemplateResponse(request, 'conversation/access_denied.html', status=403)
+    return render(request, 'conversation/single_chat.html', {'conversation_id': conversation_id,
+                                                             'conversation_title': conversation.title})
+
+
+def iframe_chat(request):
+    api_key = request.GET.get('api_key')
+    conversation_id = request.GET.get('conversation_id')
+
+    if not api_key or not conversation_id:
+        return HttpResponseForbidden("API key and conversation ID are required")
+
+    try:
+        api_key_obj = APIKey.objects.get(key=api_key)
+    except APIKey.DoesNotExist:
+        return HttpResponseForbidden("Invalid API key")
+
+    try:
+        conversation = SmartConversation.objects.get(id=conversation_id, user=api_key_obj.user)
+    except SmartConversation.DoesNotExist:
+        return HttpResponseNotFound("Conversation not found")
+
     return render(request, 'conversation/single_chat.html', {'conversation_id': conversation_id,
                                                              'conversation_title': conversation.title})
 
