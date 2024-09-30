@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Parrot, Trick, Message, SmartConversation
+from .models import Parrot, Trick, Message, SmartConversation, APIKey
 from django.utils.html import format_html
 from django.urls import reverse
 from django import forms
@@ -24,6 +24,13 @@ class MessageInline(admin.TabularInline):
     extra = 0
     readonly_fields = ("party", "content", "created_at", "updated_at")
     ordering = ("created_at",)
+
+
+class APIKeyInline(admin.TabularInline):
+    model = APIKey
+    extra = 0
+    readonly_fields = ("key", "created_at")
+    can_delete = False
 
 
 @admin.register(Parrot)
@@ -79,3 +86,16 @@ class MessageAdmin(admin.ModelAdmin):
     search_fields = ("content",)
     date_hierarchy = "created_at"
     raw_id_fields = ("conversation",)
+
+
+@admin.register(APIKey)
+class APIKeyAdmin(admin.ModelAdmin):
+    list_display = ("key", "user", "created_at")
+    list_filter = ("user", "created_at")
+    search_fields = ("key", "user__username")
+    readonly_fields = ("key", "created_at")
+
+
+@admin.register(User)
+class CustomUserAdmin(admin.ModelAdmin):
+    inlines = [APIKeyInline]
