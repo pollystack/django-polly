@@ -3,7 +3,9 @@ from .models import Parrot, Trick, Message, SmartConversation, APIKey
 from django.utils.html import format_html
 from django.urls import reverse
 from django import forms
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 # Define a custom form for Parrot model
 class ParrotAdminForm(forms.ModelForm):
